@@ -1,0 +1,26 @@
+{
+  "name": "@bpost/lambda-add-item",
+  "version": "1.0.0",
+  "description": "Lambda handler for adding items to shopping carts",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "esbuild src/index.ts --bundle --platform=node --target=node24 --outfile=dist/index.js --external:@aws-sdk/*",
+    "package": "npm run build && cd dist && zip -r ../../../dist/lambda-add-item.zip . && cd ..",
+    "lint": "eslint src --ext .ts",
+    "type-check": "tsc --noEmit",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@libs/cart-shared": "*",
+    "@bpost/api-contracts": "*"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.143",
+    "@types/node": "^20.12.12",
+    "@types/jest": "^29.5.12",
+    "esbuild": "^0.21.4",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.5",
+    "typescript": "^5.4.5"
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "compilerOptions": {
+    // Target and Module
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022"],
+
+    // Strict Type Checking (MANDATORY per IT Handbook)
+    "strict": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "noUncheckedIndexedAccess": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+
+    // Additional Checks
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true,
+
+    // Module Resolution
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+
+    // Modern Features
+    "verbatimModuleSyntax": true,
+    "allowImportingTsExtensions": false,
+
+    // Output
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "removeComments": false,
+    "importHelpers": true,
+
+    // Performance
+    "skipLibCheck": true,
+    "incremental": true,
+    "composite": true,
+
+    // Path Mapping (for NX workspace)
+    "baseUrl": ".",
+    "paths": {
+      "@bpost/api-contracts": ["libs/api-contracts/src/index.ts"],
+      "@bpost/api-contracts/*": ["libs/api-contracts/src/*"],
+      "@libs/cart-shared": ["libs/cart-shared/src/index.ts"],
+      "@libs/cart-shared/*": ["libs/cart-shared/src/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist", "**/dist", "**/*.spec.ts", "**/node_modules"]
+}

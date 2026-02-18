@@ -1,0 +1,209 @@
+{
+  "info": {
+    "name": "Serverless API - Local Development",
+    "_postman_id": "serverless-api-local",
+    "description": "Collection for testing the Serverless Shopping Cart API locally.\n\n**Setup:**\n1. Start local services: `npm run local:dev:api`\n2. Import this collection into Postman\n3. Use the requests below to test the API\n\n**Base URL:** http://localhost:3000\n**Mock JWT:** Enabled by default (no Authorization header needed)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        },
+        "description": "Check if the local API server is running and healthy."
+      },
+      "response": []
+    },
+    {
+      "name": "Create Cart",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Save cartId for subsequent requests",
+              "if (pm.response.code === 201) {",
+              "    const response = pm.response.json();",
+              "    pm.collectionVariables.set('cartId', response.cartId);",
+              "    console.log('Cart created with ID:', response.cartId);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"currency\": \"EUR\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/cart",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "cart"]
+        },
+        "description": "Create a new empty shopping cart for a user.\n\n**Request Body:**\n- `currency` (optional): Cart currency (EUR, USD, etc.)\n\n**Response:**\n- `cartId`: Unique cart identifier (saved automatically for next requests)\n- `userId`: User who owns the cart\n- `items`: Empty array\n- `total`: Zero amount"
+      },
+      "response": []
+    },
+    {
+      "name": "Get Cart",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/cart/{{cartId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "cart", "{{cartId}}"]
+        },
+        "description": "Retrieve a shopping cart by its ID.\n\n**Path Parameters:**\n- `cartId`: The cart ID (automatically populated from Create Cart response)\n\n**Response:**\n- Full cart details including items, total, and metadata"
+      },
+      "response": []
+    },
+    {
+      "name": "Add Item (PROD-001 - Premium Widget)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"productId\": \"PROD-001\",\n  \"quantity\": 2\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/cart/{{cartId}}/items",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "cart", "{{cartId}}", "items"]
+        },
+        "description": "Add Premium Widget to cart.\n\n**Product Details:**\n- ID: PROD-001\n- Name: Premium Widget\n- Price: €29.99\n\n**Request Body:**\n- `productId`: Product identifier\n- `quantity`: Number of items to add\n\n**Response:**\n- Updated cart with new item and recalculated total"
+      },
+      "response": []
+    },
+    {
+      "name": "Add Item (PROD-002 - Standard Gadget)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"productId\": \"PROD-002\",\n  \"quantity\": 1\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/cart/{{cartId}}/items",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "cart", "{{cartId}}", "items"]
+        },
+        "description": "Add Standard Gadget to cart.\n\n**Product Details:**\n- ID: PROD-002\n- Name: Standard Gadget\n- Price: €15.50"
+      },
+      "response": []
+    },
+    {
+      "name": "Add Item (PROD-003 - Budget Tool)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"productId\": \"PROD-003\",\n  \"quantity\": 3\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/cart/{{cartId}}/items",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "cart", "{{cartId}}", "items"]
+        },
+        "description": "Add Budget Tool to cart.\n\n**Product Details:**\n- ID: PROD-003\n- Name: Budget Tool\n- Price: €9.99"
+      },
+      "response": []
+    },
+    {
+      "name": "Get Cart (After Adding Items)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/cart/{{cartId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "cart", "{{cartId}}"]
+        },
+        "description": "Retrieve the cart again to see all items and the updated total."
+      },
+      "response": []
+    },
+    {
+      "name": "Error: Cart Not Found",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/cart/non-existent-cart-id",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "cart", "non-existent-cart-id"]
+        },
+        "description": "Example of a 404 error when requesting a cart that doesn't exist."
+      },
+      "response": []
+    },
+    {
+      "name": "Error: Product Not Found",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"productId\": \"PROD-999\",\n  \"quantity\": 1\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/cart/{{cartId}}/items",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "cart", "{{cartId}}", "items"]
+        },
+        "description": "Example of a 404 error when trying to add a product that doesn't exist."
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "cartId",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

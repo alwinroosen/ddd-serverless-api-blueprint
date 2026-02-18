@@ -1,0 +1,77 @@
+{
+  "name": "@bpost/serverless-api-blueprint",
+  "version": "1.0.0",
+  "description": "Production-ready serverless API blueprint demonstrating DDD, TypeScript, AWS Lambda, and bpost IT standards",
+  "private": true,
+  "workspaces": [
+    "libs/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "start": "docker-compose up -d && sleep 3 && ./scripts/setup-local-db.sh && npm run build && tsx scripts/local-api-server.ts",
+    "stop": "docker-compose down",
+    "build": "nx run-many --target=build --all --parallel=3",
+    "package": "nx run-many --target=package --projects=@bpost/lambda-* --parallel=3",
+    "test": "nx run-many --target=test --all --parallel=3",
+    "test:coverage": "nx run-many --target=test --all --parallel=3 --coverage",
+    "test:integration": "jest --config jest.integration.config.js --runInBand",
+    "lint": "nx run-many --target=lint --all --parallel=3",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "type-check": "tsc --noEmit",
+    "generate:openapi": "tsx scripts/generate-openapi.ts",
+    "generate:terraform": "tsx scripts/generate-terraform-config.ts",
+    "generate:all": "npm run generate:openapi && npm run generate:terraform",
+    "prepare": "husky install",
+    "affected:test": "nx affected --target=test --base=main",
+    "affected:build": "nx affected --target=build --base=main",
+    "graph": "nx graph"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.143",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.12.12",
+    "@typescript-eslint/eslint-plugin": "^7.10.0",
+    "@typescript-eslint/parser": "^7.10.0",
+    "axios": "^1.7.9",
+    "esbuild": "^0.21.4",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "husky": "^9.0.11",
+    "jest": "^29.7.0",
+    "json5": "^2.2.3",
+    "lint-staged": "^15.2.5",
+    "nx": "^19.1.1",
+    "prettier": "^3.2.5",
+    "ts-jest": "^29.1.4",
+    "tsx": "^4.11.0",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@asteasolutions/zod-to-openapi": "^7.1.1",
+    "@aws-sdk/client-dynamodb": "^3.576.0",
+    "@aws-sdk/lib-dynamodb": "^3.576.0",
+    "aws-jwt-verify": "^4.0.1",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "zod": "^3.23.8"
+  },
+  "engines": {
+    "node": ">=24.0.0",
+    "npm": ">=10.0.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  },
+  "volta": {
+    "node": "24.11.1"
+  }
+}
